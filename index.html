@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>To Jess</title>
+    <style>
+        body {
+            text-align: center;
+            font-family: 'Arial', sans-serif;
+            background-color: #fff5f8;
+            overflow: hidden;
+            position: relative;
+        }
+        .ecard {
+            width: 60%;
+            margin: 20px auto;
+            padding: 20px;
+            border-radius: 15px;
+            background-color: white;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            position: relative;
+            z-index: 10;
+        }
+        .header-image {
+            width: 100%;
+            border-radius: 10px;
+        }
+        .message-area {
+            margin: 20px 0;
+            font-size: 20px;
+            color: #d6336c;
+        }
+        .button-container {
+            margin-top: 20px;
+        }
+        .button {
+            font-size: 18px;
+            padding: 10px 20px;
+            margin: 10px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+        .yes-button {
+            background-color: #d6336c;
+            color: white;
+        }
+        .no-button {
+            background-color: #ccc;
+            color: black;
+        }
+        .heart {
+            position: fixed;
+            top: -50px;
+            color: red;
+            font-size: 24px;
+            animation: fall 3s linear forwards;
+        }
+        @keyframes fall {
+            0% { transform: translateY(0); opacity: 1; }
+            100% { transform: translateY(100vh); opacity: 0; }
+        }
+    </style>
+</head>
+<body>
+    <div class="ecard">
+        <h1>To the Most Beautiful Big Bootylicious DUMPTRUCK Baddie I know </h1>
+        
+        <div class="message-area">
+            <p>Will you be my Valentine?</p>
+            <div class="button-container">
+                <button class="button yes-button" onclick="rainHearts()">Yes</button>
+                <button class="button no-button" onclick="showNoMessage()">No</button>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function rainHearts() {
+            for (let i = 0; i < 50; i++) {
+                let heart = document.createElement('div');
+                heart.innerHTML = '❤';
+                heart.classList.add('heart');
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 2 + 1) + 's';
+                document.body.appendChild(heart);
+                setTimeout(() => { heart.remove(); }, 3000);
+            }
+        }
+        
+        function showNoMessage() {
+            setTimeout(() => { alert('Bitch click yes'); }, 100);
+        }
+    </script>
+</body>
+</html>
