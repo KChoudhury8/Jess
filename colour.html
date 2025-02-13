@@ -32,6 +32,7 @@
         #coloringCanvas {
             border: 1px solid #000;
             cursor: pointer;
+            touch-action: none; /* Prevent scrolling while drawing */
         }
 
         .controls {
@@ -68,7 +69,7 @@
 
     <div class="container">
         <h1>Colour innnnn</h1>
-        <p1> Lowkey wanna apologise...Kinda broke rn buttt ill get you an actual present soon I promise </p1>
+        <p>Lowkey wanna apologise...Kinda broke rn buttt ill get you an actual present soon I promise</p>
         
         <div class="canvas-container">
             <canvas id="coloringCanvas" width="500" height="500"></canvas>
@@ -97,68 +98,86 @@
     <script>
         const canvas = document.getElementById('coloringCanvas');
         const ctx = canvas.getContext('2d');
-    
+
         let drawing = false;
         let currentColor = '#f0d6f2'; // Default color
         let brushSize = 5; // Default brush size
         let currentImageIndex = 0; // Track which image is currently loaded
-    
+
         // List of bouquet images
         const images = [
-            'tulip-9992.jpg',  // Image 1
-            'download.png',     // Image 2
-            'ghost.png'         // Image 3
+            'tulip-9992.jpg',
+            'download.png',
+            'ghost.png'
         ];
-    
+
         let img = new Image();
-        
-        // Load and draw the initial image
         img.onload = function() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         };
         img.src = images[currentImageIndex];
-    
-        // Function to switch images
+
         function switchImage() {
-            currentImageIndex = (currentImageIndex + 1) % images.length; // Loop through images
+            currentImageIndex = (currentImageIndex + 1) % images.length;
             img.src = images[currentImageIndex];
         }
-    
-        // Draw on canvas
-        canvas.addEventListener('mousedown', (e) => {
+
+        function startDrawing(x, y) {
             drawing = true;
             ctx.beginPath();
-            ctx.moveTo(e.offsetX, e.offsetY);
-        });
-    
-        canvas.addEventListener('mousemove', (e) => {
-            if (drawing) {
-                ctx.lineTo(e.offsetX, e.offsetY);
-                ctx.strokeStyle = currentColor;
-                ctx.lineWidth = brushSize;
-                ctx.lineJoin = 'round';
-                ctx.stroke();
-            }
-        });
-    
-        canvas.addEventListener('mouseup', () => {
+            ctx.moveTo(x, y);
+        }
+
+        function draw(x, y) {
+            if (!drawing) return;
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = currentColor;
+            ctx.lineWidth = brushSize;
+            ctx.lineJoin = 'round';
+            ctx.stroke();
+        }
+
+        function stopDrawing() {
             drawing = false;
+        }
+
+        // Mouse Events (PC)
+        canvas.addEventListener('mousedown', (e) => startDrawing(e.offsetX, e.offsetY));
+        canvas.addEventListener('mousemove', (e) => draw(e.offsetX, e.offsetY));
+        canvas.addEventListener('mouseup', stopDrawing);
+        canvas.addEventListener('mouseleave', stopDrawing);
+
+        // Touch Events (Mobile)
+        canvas.addEventListener('touchstart', (e) => {
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            startDrawing(touch.clientX - rect.left, touch.clientY - rect.top);
         });
-    
+
+        canvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Prevent scrolling while drawing
+            const touch = e.touches[0];
+            const rect = canvas.getBoundingClientRect();
+            draw(touch.clientX - rect.left, touch.clientY - rect.top);
+        });
+
+        canvas.addEventListener('touchend', stopDrawing);
+
         function changeColor(color) {
             currentColor = color;
         }
-    
+
         function changeBrushSize(amount) {
-            brushSize = Math.max(2, brushSize + amount); // Minimum brush size of 2px
+            brushSize = Math.max(2, brushSize + amount);
             document.getElementById('brushSizeDisplay').innerText = brushSize;
         }
-    
+
         function clearCanvas() {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
         }
     </script>
-    </body>
-    </html>
+</body>
+</html>
+
