@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jess' Colouring Book</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            margin: 0;
+            padding: 0;
+            background-color: #fff5f8;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 20px auto;
+        }
+
+        .canvas-container {
+            border: 2px solid #000;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 500px;
+            position: relative;
+            overflow: hidden;
+            background-color: #fff;
+        }
+
+        #coloringCanvas {
+            border: 1px solid #000;
+            cursor: pointer;
+        }
+
+        .controls {
+            margin-top: 20px;
+        }
+
+        .controls button {
+            margin: 5px;
+            padding: 10px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .colors {
+            margin-top: 10px;
+        }
+
+        .color-btn {
+            width: 30px;
+            height: 30px;
+            border: none;
+            cursor: pointer;
+            margin: 5px;
+            border-radius: 50%;
+        }
+
+        .brush-size {
+            margin-top: 10px;
+            font-size: 18px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Colour innnnn</h1>
+        <p1> Lowkey wanna apologise...Kinda broke rn buttt ill get you an actual present soon I promise </p1>
+        
+        <div class="canvas-container">
+            <canvas id="coloringCanvas" width="500" height="500"></canvas>
+        </div>
+        
+        <div class="controls">
+            <button onclick="clearCanvas()">Clear</button>
+            <button onclick="switchImage()">Switch Image</button>
+        </div>
+
+        <div class="colors">
+            <button class="color-btn" style="background-color: #f0d6f2;" onclick="changeColor('#f0d6f2')"></button>
+            <button class="color-btn" style="background-color: #cc859b;" onclick="changeColor('#cc859b')"></button>
+            <button class="color-btn" style="background-color: #6d9c88;" onclick="changeColor('#6d9c88')"></button>
+            <button class="color-btn" style="background-color: #1b583e;" onclick="changeColor('#1b583e')"></button>
+            <button class="color-btn" style="background-color: #4b0e21;" onclick="changeColor('#4b0e21')"></button>
+        </div>
+
+        <div class="brush-size">
+            <p>Brush Size: <span id="brushSizeDisplay">5</span> px</p>
+            <button onclick="changeBrushSize(-2)">- Smaller</button>
+            <button onclick="changeBrushSize(2)">+ Larger</button>
+        </div>
+    </div>
+
+    <script>
+        const canvas = document.getElementById('coloringCanvas');
+        const ctx = canvas.getContext('2d');
+    
+        let drawing = false;
+        let currentColor = '#f0d6f2'; // Default color
+        let brushSize = 5; // Default brush size
+        let currentImageIndex = 0; // Track which image is currently loaded
+    
+        // List of bouquet images
+        const images = [
+            'tulip-9992.jpg',  // Image 1
+            'download.png',     // Image 2
+            'ghost.png'         // Image 3
+        ];
+    
+        let img = new Image();
+        
+        // Load and draw the initial image
+        img.onload = function() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        };
+        img.src = images[currentImageIndex];
+    
+        // Function to switch images
+        function switchImage() {
+            currentImageIndex = (currentImageIndex + 1) % images.length; // Loop through images
+            img.src = images[currentImageIndex];
+        }
+    
+        // Draw on canvas
+        canvas.addEventListener('mousedown', (e) => {
+            drawing = true;
+            ctx.beginPath();
+            ctx.moveTo(e.offsetX, e.offsetY);
+        });
+    
+        canvas.addEventListener('mousemove', (e) => {
+            if (drawing) {
+                ctx.lineTo(e.offsetX, e.offsetY);
+                ctx.strokeStyle = currentColor;
+                ctx.lineWidth = brushSize;
+                ctx.lineJoin = 'round';
+                ctx.stroke();
+            }
+        });
+    
+        canvas.addEventListener('mouseup', () => {
+            drawing = false;
+        });
+    
+        function changeColor(color) {
+            currentColor = color;
+        }
+    
+        function changeBrushSize(amount) {
+            brushSize = Math.max(2, brushSize + amount); // Minimum brush size of 2px
+            document.getElementById('brushSizeDisplay').innerText = brushSize;
+        }
+    
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+        }
+    </script>
+    </body>
+    </html>
